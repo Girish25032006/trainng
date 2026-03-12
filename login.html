@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0c;
+    --paper: #f5f2ec;
+    --warm-mid: #e8e2d6;
+    --accent: #c8480a;
+    --accent-dark: #9e360a;
+    --muted: #7a7060;
+    --border: rgba(15,14,12,0.12);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+
+  /* Left panel — editorial side */
+  .left-panel {
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c8480a22 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c8480a15 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+
+  .brand span { color: var(--accent); }
+
+  .left-content {
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.25s forwards;
+  }
+
+  .left-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .left-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--paper);
+    margin-bottom: 1.5rem;
+  }
+
+  .left-headline em {
+    font-style: italic;
+    color: rgba(245,242,236,0.5);
+  }
+
+  .left-body {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(245,242,236,0.55);
+    max-width: 320px;
+  }
+
+  .left-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.4s forwards;
+  }
+
+  .avatar-stack {
+    display: flex;
+  }
+
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    margin-right: -8px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--paper);
+  }
+
+  .av1 { background: #c8480a; }
+  .av2 { background: #4a7c6f; }
+  .av3 { background: #7a5c9e; }
+
+  .left-footer-text {
+    font-size: 0.8rem;
+    color: rgba(245,242,236,0.45);
+    line-height: 1.4;
+  }
+
+  .left-footer-text strong {
+    color: rgba(245,242,236,0.75);
+    font-weight: 500;
+    display: block;
+  }
+
+  /* Right panel — form */
+  .right-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    background: var(--paper);
+  }
+
+  .form-card {
+    width: 100%;
+    max-width: 380px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+
+  .form-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 2.25rem;
+  }
+
+  .form-sub a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .form-sub a:hover { text-decoration: underline; }
+
+  .field {
+    margin-bottom: 1.2rem;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .field input::placeholder { color: rgba(15,14,12,0.3); }
+
+  .field input:hover { border-color: rgba(15,14,12,0.25); }
+
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200,72,10,0.1);
+  }
+
+  .field-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .field-row label { margin-bottom: 0; }
+
+  .forgot-link {
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .forgot-link:hover { text-decoration: underline; }
+
+  .remember-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .remember-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .remember-row label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.85rem 1.5rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.2s, transform 0.12s;
+    margin-bottom: 1rem;
+  }
+
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-primary:active { transform: scale(0.99); }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    background: white;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 0.65rem;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(15,14,12,0.3);
+    background: var(--warm-mid);
+  }
+
+  .g-icon {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    body { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 2.5rem 1.5rem; align-items: flex-start; padding-top: 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Left panel -->
+<div class="left-panel">
+  <div class="brand">Arc<span>.</span></div>
+
+  <div class="left-content">
+    <p class="left-eyebrow">Welcome back</p>
+    <h1 class="left-headline">Where ideas<br><em>become</em><br>work.</h1>
+    <p class="left-body">Your projects, your team, your momentum — all in one place. Sign in to pick up exactly where you left off.</p>
+  </div>
+
+  <div class="left-footer">
+    <div class="avatar-stack">
+      <div class="avatar av1">KL</div>
+      <div class="avatar av2">MR</div>
+      <div class="avatar av3">TP</div>
+    </div>
+    <div class="left-footer-text">
+      <strong>12,400+ teams</strong>
+      already signed in today
+    </div>
+  </div>
+</div>
+
+<!-- Right panel -->
+<div class="right-panel">
+  <div class="form-card">
+    <h2 class="form-heading">Sign in</h2>
+    <p class="form-sub">No account? <a href="#">Create one free</a></p>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <div class="field-row">
+        <label for="password">Password</label>
+        <a href="#" class="forgot-link">Forgot?</a>
+      </div>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <div class="remember-row">
+      <input type="checkbox" id="remember">
+      <label for="remember">Keep me signed in</label>
+    </div>
+
+    <button class="btn-primary" onclick="handleLogin()">Sign in →</button>
+
+    <div class="divider">or continue with</div>
+
+    <button class="btn-secondary">
+      <svg class="g-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+        <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <button class="btn-secondary">
+      <svg class="g-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 0C4.03 0 0 4.03 0 9c0 3.98 2.58 7.35 6.16 8.54.45.08.61-.2.61-.44v-1.53c-2.5.54-3.03-1.2-3.03-1.2-.41-1.04-1-1.32-1-1.32-.82-.56.06-.55.06-.55.9.06 1.38.93 1.38.93.8 1.37 2.1.97 2.61.74.08-.58.31-.97.57-1.19-1.99-.23-4.08-1-4.08-4.43 0-.98.35-1.78.93-2.41-.09-.23-.4-1.14.09-2.37 0 0 .76-.24 2.49.93A8.66 8.66 0 0 1 9 4.36c.77 0 1.54.1 2.26.3 1.73-1.17 2.49-.93 2.49-.93.49 1.23.18 2.14.09 2.37.58.63.93 1.43.93 2.41 0 3.44-2.1 4.2-4.1 4.42.32.28.61.83.61 1.67v2.48c0 .24.16.52.62.43A9.01 9.01 0 0 0 18 9c0-4.97-4.03-9-9-9z" fill="#1b1f23"/>
+      </svg>
+      Continue with GitHub
+    </button>
+  </div>
+</div>
+
+<script>
+function handleLogin() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.querySelector('.btn-primary');
+
+  if (!email || !password) {
+    btn.textContent = 'Please fill all fields';
+    btn.style.background = '#7a7060';
+    setTimeout(() => {
+      btn.textContent = 'Sign in →';
+      btn.style.background = '';
+    }, 2000);
+    return;
+  }
+
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.textContent = '✓ Signed in';
+    btn.style.background = '#2d6a4f';
+    setTimeout(() => {
+      btn.textContent = 'Sign in →';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 2500);
+  }, 1200);
+}
+
+document.getElementById('password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+</script>
+</body>
+</html>
